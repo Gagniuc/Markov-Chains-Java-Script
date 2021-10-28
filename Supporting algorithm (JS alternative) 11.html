@@ -1,0 +1,48 @@
+<script>
+
+//##############################################################################################
+//# John Wiley & Sons, Inc.                                                                    #
+//#                                                                                            #
+//# Book:   Markov Chains: From Theory To Implementation And Experimentation                   #
+//# Author: Dr. Paul Gagniuc                                                                   #
+//# Data:   01/09/2016                                                                         #
+//#                                                                                            #
+//# Description:                                                                               #
+//# Supporting algorithm 11. The conversion of measurements to states.                         #
+//# A range of values is divided into 4 equal regions. Each region                             #
+//# corresponds to a state: “A”, “B”, “C”, and “D”. The numeric values                         #
+//# are associated with a representative letter based on their position                        #
+//# over the regions. Thus, the initial values are listed as letters (observations).           #
+//##############################################################################################
+
+var Inp = [];
+var Obs = "";
+var Reg = "";
+var l;
+
+var R = "159,82,187,194,179,115,197,102,105,104,95,126,74,143,143,127,98,70,92,170,168,182,149,85,137,100,170,180,61,177,86,195,198,182,150,197,103,103,186,100,96,196";
+
+Inp = R.split(",");
+var Lu = 200;
+var Ld = 60;
+var n = 4;
+
+Pr = (Lu - Ld) / n;
+
+for(var i=0; i<Inp.length; i++){
+
+    s = (Inp[i] - Ld) / Pr;
+    s = Math.floor(s);
+
+    if(s === 0){l = "A";} 
+    if(s === 1){l = "B";}
+    if(s === 2){l = "C";}
+    if(s === 3){l = "D";}
+
+    Obs = Obs + l;
+    Reg = Reg + s + ",";
+}
+
+document.write("Reg=" + Reg + "</br>" + "Obs=" + Obs + "</br>");
+
+</script>

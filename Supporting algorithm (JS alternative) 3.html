@@ -1,0 +1,94 @@
+<script>
+
+//##############################################################################################
+//# John Wiley & Sons, Inc.                                                                    #
+//#                                                                                            #
+//# Book:   Markov Chains: From Theory To Implementation And Experimentation                   #
+//# Author: Dr. Paul Gagniuc                                                                   #
+//# Data:   01/09/2016                                                                         #
+//#                                                                                            #
+//# Description:                                                                               #
+//# Supporting algorithm 3. The conversion of a sequence of observations to a transition       #
+//# matrix. A 2x2 matrix is used for counting all the combinations of pairs of letters         #
+//# (Da->b) in the sequence (Da->b is represented by joining two string variables, namely      #
+//# DI1 and DI2). In parallel, the first letter of each pair (Na) is counted inside the        #
+//# sequence (Na is represented by variable DI1). Next, the values from each element of the    #
+//# 2x2 matrix are divided by the number of first letters found in the sequence. Depending     #
+//# on the type of values (counts or probability values) stored inside, the same matrix is     #
+//# then shown twice in a graphical format.                                                    #
+//##############################################################################################
+
+
+var M = [];
+
+ExtractProb("SRRSRSRRSRSRRSS");
+
+function ExtractProb(s) {
+var Eb = "S";
+var Es = "R";
+
+for(var i=1; i<=2; i++){
+    M[i]=[];
+    for(var j=1; j<=2; j++){
+        M[i][j]=0;
+    }
+}
+
+var TB = 0;
+var TS = 0;
+var r;
+var c;
+
+for(var i=1; i<s.length-1; i++){
+
+        var DI1 = s.substr(i, 1);
+        var DI2 = s.substr(i+1, 1);
+
+        if (DI1 === Eb) {r = 1;}
+        if (DI1 === Es) {r = 2;}
+        if (DI2 === Eb) {c = 1;}
+        if (DI2 === Es) {c = 2;}
+
+        M[r][c] = M[r][c] + 1;
+
+        if (DI1 === Eb) {TB = TB + 1;}
+        if (DI1 === Es) {TS = TS + 1;}
+}
+
+DrowMatrix(2, 2, "(C)", "Count:");
+
+for(var i=1; i<=2; i++){
+    for(var j=1; j<=2; j++){
+       if (i === 1) {M[i][j] = Math.round(M[i][j]) / TB;}
+       if (i === 2) {M[i][j] = Math.round(M[i][j]) / TS;}
+    }
+}
+
+DrowMatrix(2, 2, "(P)", "Transition matrix M:");
+}
+
+function DrowMatrix(ib, jb, model, msg) {
+ct = "";
+Eb = "S";
+Es = "R";
+
+ct += "<table border='1'><tr>";
+ct += "<td>" + model + "</td><td>" + Eb + "</td><td>" + Es + "</td></tr>";
+
+for(var i=1; i<=ib; i++){
+	ct += "<tr>";
+    	for(var j=1; j<=jb; j++){
+    		v = M[i][j].toFixed(1);
+        	if (j === 1 && i === 1) {ct += "<td>" + Eb + "</td>";}
+        	if (j === 1 && i === 2) {ct += "<td>" + Es + "</td>";}
+        	ct += "<td>" + v + "</td>";   
+    	}
+ct += "</tr>";
+}
+
+ct += "</table>";
+rez = msg + " M[" + jb + "," + ib + "]" + "</br>" + ct + "</br>";
+
+document.write(rez);
+}
+</script>

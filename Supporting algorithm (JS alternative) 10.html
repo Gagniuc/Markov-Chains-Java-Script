@@ -1,0 +1,115 @@
+<script>
+
+//##############################################################################################
+//# John Wiley & Sons, Inc.                                                                    #
+//#                                                                                            #
+//# Book:   Markov Chains: From Theory To Implementation And Experimentation                   #
+//# Author: Dr. Paul Gagniuc                                                                   #
+//# Data:   01/09/2016                                                                         #
+//#                                                                                            #
+//# Description:                                                                               #
+//# Supporting algorithm 10. Predictions based on sequences produced by n-state                #
+//# Markov machines. This example also uses a DNA sequence as a model. However,                #
+//# the algorithm allows for an unlimited number of letters (observations).                    #
+//# Previously, the vector – matrix multiplication cycle was declared manually                 #
+//# with a range of expressions. Here, the multiplication cycle is made                        #
+//# iteratively. For a prediction on more than 4 states, the matrix elements                   #
+//# and the number of vector components can be increased to cover a new                        #
+//# prediction requirement. Note that “ExtractProb” function is not shown.                     #
+//# However, when the above algorithm is used the “ExtractProb” function                       #
+//# must be present.                                                                           #
+//##############################################################################################
+
+var M = [];
+var v = [];
+
+for(var i=1; i<=4; i++){M[i]=[];}
+for(var i=0; i<=3; i++){v[i]=[];}
+
+ExtractProb("TACTTCGATTTAAGCGCGGCGGCCTATATTA");
+
+var chain = 5;
+
+v[0][0] = 1;
+v[1][0] = 0;
+v[2][0] = 0;
+v[3][0] = 0;
+
+v[0][1] = 0;
+v[1][1] = 0;
+v[2][1] = 0;
+v[3][1] = 0;
+
+for(var k=1; k<=chain; k++){
+    for(var i=0; i<=3; i++){
+        for(var j=0; j<=3; j++){
+           v[i][1] = v[i][1] + (v[j][0] * M[j + 1][i + 1]);
+        }
+    }
+
+for(var i=0; i<=3; i++){
+    v[i][0] = v[i][1];
+    v[i][1] = 0;
+}
+
+    var A = v[0][0];
+    var T = v[1][0];
+    var G = v[2][0];
+    var C = v[3][0];
+
+document.write("V("+k+")=["+A+"|"+T+"|"+G+"|"+C+"]</br>");
+}
+
+function ExtractProb(s) {
+var Ea = "A";
+var Et = "T";
+var Eg = "G";
+var Ec = "C";
+
+for(var i=1; i<=4; i++){
+    M[i]=[];
+    for(var j=1; j<=4; j++){
+        M[i][j]=0;
+    }
+}
+
+var Ta = 0;
+var Tt = 0;
+var Tg = 0;
+var Tc = 0;
+var r;
+var c;
+
+for(var i=1; i<s.length-1; i++){
+
+        var DI1 = s.substr(i, 1);
+        var DI2 = s.substr(i+1, 1);
+
+        if (DI1 === Ea) {r = 1;}
+        if (DI1 === Et) {r = 2;}
+        if (DI1 === Eg) {r = 3;}
+        if (DI1 === Ec) {r = 4;}
+
+        if (DI2 === Ea) {c = 1;}
+        if (DI2 === Et) {c = 2;}
+        if (DI2 === Eg) {c = 3;}
+        if (DI2 === Ec) {c = 4;}
+
+        M[r][c] = M[r][c] + 1;
+
+        if (DI1 === Ea) {Ta = Ta + 1;}
+        if (DI1 === Et) {Tt = Tt + 1;}
+        if (DI1 === Eg) {Tg = Tg + 1;}
+        if (DI1 === Ec) {Tc = Tc + 1;}
+}
+
+for(var i=1; i<=4; i++){
+    for(var j=1; j<=4; j++){
+       if (i === 1) {M[i][j] = Math.round(M[i][j]) / Ta;}
+       if (i === 2) {M[i][j] = Math.round(M[i][j]) / Tt;}
+       if (i === 3) {M[i][j] = Math.round(M[i][j]) / Tg;}
+       if (i === 4) {M[i][j] = Math.round(M[i][j]) / Tc;}
+    }
+}
+}
+</script>

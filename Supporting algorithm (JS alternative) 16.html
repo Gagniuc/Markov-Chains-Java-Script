@@ -1,0 +1,87 @@
+<script>
+
+//##############################################################################################
+//# John Wiley & Sons, Inc.                                                                    #
+//#                                                                                            #
+//# Book:   Markov Chains: From Theory To Implementation And Experimentation                   #
+//# Author: Dr. Paul Gagniuc                                                                   #
+//# Data:   01/09/2016                                                                         #
+//#                                                                                            #
+//# Description:                                                                               #
+//# Supporting algorithm 16. Transition probability tester. Previously, a sequence             #
+//# of observations has been provided by a simulator. To test the accuracy of the              #
+//# simulator, the sequence of observations is used for creating a transition matrix,          #
+//# which is then compared with the original.                                                  #
+//##############################################################################################
+
+var P = [];
+
+for(var i=1; i<=4; i++){
+    P[i]=[];
+    for(var j=1; j<=4; j++){
+        P[i][j]=0;
+    }
+}
+
+var z = "";
+
+ExtractProb("BABDCBDCBABDCBCBDCBABABABDCBDCBDCBCBABABDCBDCBDCBABCBABCBDCBDCBDCBDCBABCBCBABABDCBDCBCBDCBCBDCBDCBAB");
+
+z = "<table border='1'>";
+for(var i=1; i<=4; i++){
+    z += "<tr>";
+    for(var j=1; j<=4; j++){
+       z += "<td>" + P[i][j].toFixed(2) + "</td>" ;
+    }
+z += "</tr>";
+}
+z += "</table>";
+
+document.write(z);
+
+function ExtractProb(s) {
+var Ea = "A";
+var Eb = "B";
+var Ec = "C";
+var Ed = "D";
+
+var Ta = 0;
+var Tb = 0;
+var Tc = 0;
+var Td = 0;
+var r;
+var c;
+
+for(var i=1; i<s.length-1; i++){
+
+        var DI1 = s.substr(i, 1);
+        var DI2 = s.substr(i+1, 1);
+
+        if (DI1 === Ea) {r = 1;}
+        if (DI1 === Eb) {r = 2;}
+        if (DI1 === Ec) {r = 3;}
+        if (DI1 === Ed) {r = 4;}
+
+        if (DI2 === Ea) {c = 1;}
+        if (DI2 === Eb) {c = 2;}
+        if (DI2 === Ec) {c = 3;}
+        if (DI2 === Ed) {c = 4;}
+
+        P[r][c] = P[r][c] + 1;
+
+        if (DI1 === Ea) {Ta = Ta + 1;}
+        if (DI1 === Eb) {Tb = Tb + 1;}
+        if (DI1 === Ec) {Tc = Tc + 1;}
+        if (DI1 === Ed) {Td = Td + 1;}
+}
+
+for(var i=1; i<=4; i++){
+    for(var j=1; j<=4; j++){
+       if (i === 1) {P[i][j] = Math.round(P[i][j]) / Ta;}
+       if (i === 2) {P[i][j] = Math.round(P[i][j]) / Tb;}
+       if (i === 3) {P[i][j] = Math.round(P[i][j]) / Tc;}
+       if (i === 4) {P[i][j] = Math.round(P[i][j]) / Td;}
+    }
+}
+}
+</script>

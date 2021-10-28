@@ -1,0 +1,113 @@
+<script>
+
+//##############################################################################################
+//# John Wiley & Sons, Inc.                                                                    #
+//#                                                                                            #
+//# Book:   Markov Chains: From Theory To Implementation And Experimentation                   #
+//# Author: Dr. Paul Gagniuc                                                                   #
+//# Data:   01/09/2016                                                                         #
+//#                                                                                            #
+//# Description:                                                                               #
+//# Supporting algorithm 17. Average time tester. The tester is composed                       #
+//# of a simulator that generates 10,000 observations. These observations                      #
+//# are then analyzed and the frequencies of “A”, “B”, “C” and “D” letters                     #
+//# are determined. These frequencies represent the average time spent in                      #
+//# each state.                                                                                #
+//##############################################################################################
+
+var Jar = [];
+var P = [];
+
+for(var i=0; i<=4; i++){
+    P[i]=[];
+    for(var j=0; j<=3; j++){
+        P[i][j]=0;
+    }
+}
+
+var f = [];
+var pro = "";
+
+f[0] = 0;
+f[1] = 0;
+f[2] = 0;
+f[3] = 0;
+
+P[0][0] = "A";
+P[0][1] = "B";
+P[0][2] = "C";
+P[0][3] = "D";
+
+P[1][0] = 0;
+P[1][1] = 1;
+P[1][2] = 0;
+P[1][3] = 0;
+
+P[2][0] = 0.33;
+P[2][1] = 0;
+P[2][2] = 0.33;
+P[2][3] = 0.33;
+
+P[3][0] = 0;
+P[3][1] = 1;
+P[3][2] = 0;
+P[3][3] = 0;
+
+P[4][0] = 0;
+P[4][1] = 0;
+P[4][2] = 1;
+P[4][3] = 0;
+
+for(var j=1; j<=4; j++){
+    Jar[j] = Fill_Jar(j);
+}
+
+var draws = 10000;
+var z = "";
+var a;
+
+a = Draw(2);
+
+for (var i=1; i<=draws; i++){
+    for (var j=0; j<=3; j++){
+        if (a === P[0][j]){
+            a = Draw(j + 1);
+            z += a;
+            j=3;
+        } 
+    }
+}
+
+for(var i=1; i<z.length; i++){
+    g = z.substr(i, 1); 
+    if(g === "A"){f[0] = f[0] + 1;} 
+    if(g === "B"){f[1] = f[1] + 1;}
+    if(g === "C"){f[2] = f[2] + 1;}
+    if(g === "D"){f[3] = f[3] + 1;}
+}
+
+for(var i=0; i<=3; i++){
+pro += P[0][i] + "=" + Math.round((100 / z.length) * f[i]) + "%&emsp;";
+}
+
+document.write(pro);
+
+function Draw(S) {
+    randomly_choose = Math.floor((Math.random() * Jar[S].length));
+    ball = Jar[S].substr(randomly_choose, 1);
+    return ball;
+}
+
+function Fill_Jar(S){
+var Ltot = 100;
+var a = 1;
+var b = "";
+    for (var i=0; i<=3; i++){
+    a = Math.round(Ltot * P[S][i]);
+        for (var j=1; j<=a; j++){
+             b = b + P[0][i];
+        }
+    }
+return b;
+}
+</script>

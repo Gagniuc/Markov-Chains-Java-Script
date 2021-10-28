@@ -1,0 +1,126 @@
+<script>
+
+//##############################################################################################
+//# John Wiley & Sons, Inc.                                                                    #
+//#                                                                                            #
+//# Book:   Markov Chains: From Theory To Implementation And Experimentation                   #
+//# Author: Dr. Paul Gagniuc                                                                   #
+//# Data:   01/09/2016                                                                         #
+//#                                                                                            #
+//# Description:                                                                               #
+//# Supporting algorithm 9. Step-by-step prediction by using a DNA sequence.                   #
+//# The letters that make up a DNA sequence are: “A”, “T”, “G” and “C”. Thus,                  #
+//# the observations present in a DNA sequence are suitable for exemplifications               #
+//# involving a 4-state Markov machine. As before, a 4x4 matrix is used for                    #
+//# counting all the combinations of pairs of letters (Da->b) in the DNA                       #
+//# sequence (Da->b is represented by joining two string variables, namely                     #
+//# DI1 and DI2). In parallel, the first letter (Na) of each pair is counted                   #
+//# inside the DNA sequence (Na is represented by variable DI1). Secondly,                     #
+//# the transition probabilities are computed. The values from each element                    #
+//# of the matrix are divided by their corresponding Na. In the final phase,                   #
+//# a probability vector is repeatedly multiplied by the new transition matrix.                #
+//# The vectors obtained from these repetitions show the probability of each                   #
+//# outcome on a particular step.                                                              #
+//##############################################################################################
+
+var M = [];
+var v = [];
+
+ExtractProb("TACTTCGATTTAAGCGCGGCGGCCTATATTA");
+
+var chain = 3;
+var Baseby = "";
+
+v[0] = 1;
+v[1] = 0;
+v[2] = 0;
+v[3] = 0;
+
+for(var i=1; i<=chain; i++){
+x = (v[0]*M[1][1])+(v[1]*M[2][1])+(v[2]*M[3][1])+(v[3]*M[4][1]);
+y = (v[0]*M[1][2])+(v[1]*M[2][2])+(v[2]*M[3][2])+(v[3]*M[4][2]);
+z = (v[0]*M[1][3])+(v[1]*M[2][3])+(v[2]*M[3][3])+(v[3]*M[4][3]);
+w = (v[0]*M[1][4])+(v[1]*M[2][4])+(v[2]*M[3][4])+(v[3]*M[4][4]);
+
+    v[0] = x;
+    v[1] = y;
+    v[2] = z;
+    v[3] = w;
+
+document.write("Day("+i+")=["+v[0]+"|"+v[1]+"|"+v[2]+"|"+v[3]+"]</br>");
+Baseby = Baseby + Base(v);
+}
+
+document.write("BasesPredicted[" + Baseby + "]");
+
+function Base(v){
+var x, h;
+var old=0;
+
+  for(var i=0; i<=v.length; i++){
+     if(v[i] > old){
+         x = v[i];
+         h = i;
+     } 
+     old = x;
+  }
+     if(h === 0) {n = "A";}
+     if(h === 1) {n = "T";}
+     if(h === 2) {n = "G";}
+     if(h === 3) {n = "C";}  
+     return n;
+}
+
+function ExtractProb(s) {
+var Ea = "A";
+var Et = "T";
+var Eg = "G";
+var Ec = "C";
+
+for(var i=1; i<=4; i++){
+    M[i]=[];
+    for(var j=1; j<=4; j++){
+        M[i][j]=0;
+    }
+}
+
+var Ta = 0;
+var Tt = 0;
+var Tg = 0;
+var Tc = 0;
+var r;
+var c;
+
+for(var i=1; i<s.length-1; i++){
+
+        var DI1 = s.substr(i, 1);
+        var DI2 = s.substr(i+1, 1);
+
+        if (DI1 === Ea) {r = 1;}
+        if (DI1 === Et) {r = 2;}
+        if (DI1 === Eg) {r = 3;}
+        if (DI1 === Ec) {r = 4;}
+
+        if (DI2 === Ea) {c = 1;}
+        if (DI2 === Et) {c = 2;}
+        if (DI2 === Eg) {c = 3;}
+        if (DI2 === Ec) {c = 4;}
+
+        M[r][c] = M[r][c] + 1;
+
+        if (DI1 === Ea) {Ta = Ta + 1;}
+        if (DI1 === Et) {Tt = Tt + 1;}
+        if (DI1 === Eg) {Tg = Tg + 1;}
+        if (DI1 === Ec) {Tc = Tc + 1;}
+}
+
+for(var i=1; i<=4; i++){
+    for(var j=1; j<=4; j++){
+       if (i === 1) {M[i][j] = Math.round(M[i][j]) / Ta;}
+       if (i === 2) {M[i][j] = Math.round(M[i][j]) / Tt;}
+       if (i === 3) {M[i][j] = Math.round(M[i][j]) / Tg;}
+       if (i === 4) {M[i][j] = Math.round(M[i][j]) / Tc;}
+    }
+}
+}
+</script>

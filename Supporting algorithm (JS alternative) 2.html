@@ -1,0 +1,62 @@
+<script>
+
+//##############################################################################################
+//# John Wiley & Sons, Inc.                                                                    #
+//#                                                                                            #
+//# Book:   Markov Chains: From Theory To Implementation And Experimentation                   #
+//# Author: Dr. Paul Gagniuc                                                                   #
+//# Data:   01/09/2016                                                                         #
+//#                                                                                            #
+//# Description:                                                                               #
+//# Supporting algorithm 2. A two states Markov Chain simulator based on probability values.   #
+//# The probability values present inside the transition matrix are directly used for an       #
+//# automatic generation of the letter combination that make up the representation of the      #
+//# jars. Thus, the two letter sequences have a calculated proportion of “W” and “B”           #
+//# letters. The chance of a letter chosen at random from one of the two sequences             #
+//# is directly dictated by the proportions of “W” and “B” letters.                            #
+//##############################################################################################
+
+
+var draws = 17;
+var z="";
+
+var Jar = [];
+Jar[0]="";
+Jar[1]="";
+
+Fill_Jar(0, 0.2);
+Fill_Jar(1, 0.6);
+
+a = Draw(1);
+z = z + " Jar W[" + a + "],";
+
+for (var i=1; i<=draws; i++){
+    if (a === "W") {
+        a = Draw(0); 
+        z = z + " Jar W[" + a + "],";
+    } else {
+        a = Draw(1); 
+        z = z + " Jar B[" + a + "],";
+    }
+}
+
+document.write(z);
+
+function Draw(S) {
+    randomly_choose = Math.floor((Math.random() * Jar[S].length));
+    ball = Jar[S].substr(randomly_choose, 1);
+    return ball;
+}
+
+function Fill_Jar(S, p){
+    var Balls_W = Math.round(100 * p);
+    var Balls_B = 100 - Balls_W;
+
+    for (var i=1; i<=Balls_W; i++){
+        Jar[S] = Jar[S] + "W"; 
+    }
+    for (var i=1; i<=Balls_B; i++){
+        Jar[S] = Jar[S] + "B"; 
+    } 
+}
+</script>
