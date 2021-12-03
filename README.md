@@ -1,5 +1,5 @@
 # Markov Chains in Java Script
-Markov Chains (Java Script)
+Here are all the Markov Chain algorithms in Java Script that are associated with the book entitled <i>Markov chains: from theory to implementation and experimentation</i>.
 
 # References
 
